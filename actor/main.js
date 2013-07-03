@@ -109,6 +109,6 @@ function __Hypernumbers_init()   {
 
     CAAT.loop(60);
 }
+__Hypernumbers_init();
 
-window.addEventListener('load', __Hypernumbers_init, false);
 

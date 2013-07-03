@@ -1,6 +1,8 @@
 
-ejecta.include('caat.js')
-ejecta.include('namespace.js')
-ejecta.include('context.js')
-ejecta.include('gamescene.js')
-ejecta.include('main.js')
+ejecta.include('lib/caat.js')
+ejecta.include('game/namespace.js')
+
+ejecta.include('game/context.js')
+
+ejecta.include('actor/gamescene.js')
+ejecta.include('actor/main.js')

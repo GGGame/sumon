@@ -1,173 +1,161 @@
-/**
- */
+
 
 (function() {
-    HN.GameModes= {
-        classic:  {
-            fixed_table_size:   true,
-            rearrange_on_remove:true,
-            rows_initial:       8,
-            columns_initial:    8,
-            rows_max:           8,
-            columns_max:        8,
-            time_policy:        -500,
-            minTurnTime:        12000,
-            number_policy:      [10,10,10,15,15,15,20,20,25,30,35,40,45,50],
-            name:               'classic'
-        },
-        progressive : {
-            fixed_table_size:   false,
-            rearrange_on_remove:true,
-            rows_initial:       3,
-            columns_initial:    3,
-            rows_max:           8,
-            columns_max:        8,
-            time_policy:        0,
-            number_policy:      [10,10,10,10,10,15,15,15,15,20,25,30,35,40,45,50],
-            name:               'progressive'
-        },
-        respawn : {
-            fixed_table_size:   true,
-            rearrange_on_remove:true,
-            respawn:            true,
-            respawn_time:       22000,
-            rows_initial:       8,
-            columns_initial:    8,
-            rows_max:           8,
-            columns_max:        8,
-            time_policy:        -1000,
-            initial_map:        [
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,1,1,0,0,0],
-                    [0,0,1,1,1,1,0,0],
-                    [0,1,1,1,1,1,1,0],
-                    [1,1,1,1,1,1,1,1]
-            ],
-            number_policy:      [10,10,10,10,10,15,15,15,15,20,25,30,35,40,45,50],
-            name:               'respawn'
-        }
-    }
+   HN.GameModes= {
+       classic:  {
+           fixed_table_size:   true,
+           rearrange_on_remove:true,
+           rows_initial:       8,
+           columns_initial:    8,
+           rows_max:           8,
+           columns_max:        8,
+           time_policy:        -500,
+           minTurnTime:        12000,
+           number_policy:      [10,10,10,15,15,15,20,20,25,30,35,40,45,50],
+           name:               'classic'
+       },
+       progressive : {
+           fixed_table_size:   false,
+           rearrange_on_remove:true,
+           rows_initial:       3,
+           columns_initial:    3,
+           rows_max:           8,
+           columns_max:        8,
+           time_policy:        0,
+           number_policy:      [10,10,10,10,10,15,15,15,15,20,25,30,35,40,45,50],
+           name:               'progressive'
+       },
+       respawn : {
+           fixed_table_size:   true,
+           rearrange_on_remove:true,
+           respawn:            true,
+           respawn_time:       22000,
+           rows_initial:       8,
+           columns_initial:    8,
+           rows_max:           8,
+           columns_max:        8,
+           time_policy:        -1000,
+           initial_map:        [
+                   [0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0],
+                   [0,0,0,1,1,0,0,0],
+                   [0,0,1,1,1,1,0,0],
+                   [0,1,1,1,1,1,1,0],
+                   [1,1,1,1,1,1,1,1]
+           ],
+           number_policy:      [10,10,10,10,10,15,15,15,15,20,25,30,35,40,45,50],
+           name:               'respawn'
+       }
+   }
 })();
 
 (function() {
 
-    HN.Brick= function() {
-        return this;
-    };
+   HN.Brick= function() {
+       return this;
+   };
 
-    HN.Brick.prototype= {
+   HN.Brick.prototype= {
 
-        value:      0,
-        color:      0,
-        selected:   false,
-        removed:    false,
+       value:      0,
+       color:      0,
+       selected:   false,
+       removed:    false,
 
-        row:        0,
-        column:     0,
+       row:        0,
+       column:     0,
 
-        context:    null,
-        delegate:   null,
+       context:    null,
+       delegate:   null,
 
-        /**
-         *
-         * @param row
-         * @param column
-         * @param context the HN.Context instance
-         */
-        initialize : function(row, column, context, removed) {
 
-            removed= removed || false;
+       initialize : function(row, column, context, removed) {
 
-            this.row=       row;
-            this.column=    column;
-            this.selected=  false;
-            this.removed=   removed;
-            this.color=     (Math.random()*context.getNumberColors())>>0;
-            this.context=   context;
+           removed= removed || false;
 
-            this.respawn();
-        },
-        changeSelection : function() {
-            this.selected= !this.selected;
-            this.context.selectionChanged(this);
-        },
-        respawn : function() {
+           this.row=       row;
+           this.column=    column;
+           this.selected=  false;
+           this.removed=   removed;
+           this.color=     (Math.random()*context.getNumberColors())>>0;
+           this.context=   context;
 
-            this.selected= false;
+           this.respawn();
+       },
+       changeSelection : function() {
+           this.selected= !this.selected;
+           this.context.selectionChanged(this);
+       },
+       respawn : function() {
 
-            // favorecer los numeros 3..9
-            if ( Math.random()>.3 ) {
-                this.value= 4 + (Math.random()*6)>>0;
-            } else {
-                this.value= 1 + (Math.random()*3)>>0;
-            }
+           this.selected= false;
 
-            if ( this.value<1 ) {
-                this.value=1;
-            } else if ( this.value>9 ) {
-                this.value=9;
-            }
+           
+           if ( Math.random()>.3 ) {
+               this.value= 4 + (Math.random()*6)>>0;
+           } else {
+               this.value= 1 + (Math.random()*3)>>0;
+           }
 
-            if ( null!=this.delegate ) {
-                this.delegate();
-            }
+           if ( this.value<1 ) {
+               this.value=1;
+           } else if ( this.value>9 ) {
+               this.value=9;
+           }
 
-            return this;
-        }
-    };
+           if ( null!=this.delegate ) {
+               this.delegate();
+           }
+
+           return this;
+       }
+   };
 
 })();
 
 (function() {
 
-    HN.Context= function() {
-        this.eventListener= [];
-        return this;
-    };
+   HN.Context= function() {
+       this.eventListener= [];
+       return this;
+   };
 
     HN.Context.prototype= {
 
-        eventListener:  null,   // context listeners
+        eventListener:  null,
 
         gameMode:       null,
 
-        rows:           0,      // model size in
-        columns:        0,      //  rows x columns
+        rows:           0,      
+        columns:        0,      
         numNumberColors:0,
         initialRows:    0,
         initialColumns: 0,
         currentRows:    0,
         currentColumns: 0,
 
-        /**
-         * Numero inicial de ladrillos activos en el nivel.
-         * Se puede especificar un mapa de ladrillos activos a traves del gameMode.
-         * Como no tiene porque coincidir con todos los ladrillos de initialRows*initialColumns,
-         * necesito contarlos porque el juego no progresa de la animaci—n de entrada de ladrillos
-         * volando hasta que todos llegan a su sitio.
-         */
+
         initialBricks:  0,
 
-        data:           null,   // context model. Bricks.
+        data:           null,   
 
-        guessNumber:    0,      // number to sum up with bricks.
-        time:           0,      // maximum time to take to guess an adding number sequence.
+        guessNumber:    0,      
+        time:           0,      
 
-        selectedList:   null,   // selected bricks.
+        selectedList:   null,   
 
-        status:         0,      // <-- control logic -->
+        status:         0,      
         level:          0,
 
-        score:          0,      // game points.
+        score:          0,      
 
 
         turnTime:       15000,
 
         turnTimes:      [20000, 15000, 10000],
-        difficulty:     0,    // 0: easy, 1: hard, 2: hardcore.
+        difficulty:     0,    
 
         brickIncrementByDifficulty: [5,10],
 
@@ -344,11 +332,11 @@
         },
         selectionChanged : function(brick) {
 
-            // si ya estaba en la lista de seleccionados, quitarlo.
+            
             var i,j;
             for( i=0; i<this.selectedList.length; i++ ) {
-                // esta en la lista.
-                // eliminar y salir del metodo
+                
+                
                 if ( this.selectedList[i]==brick ) {
                     this.selectedList.splice( i, 1 );
                     this.fireEvent('brick','selection',brick);
@@ -356,7 +344,7 @@
                 }
             }
 
-            // chequear que la suma de los elementos seleccionados es igual al numero magico.
+            
             var sum=0;
             for( i=0; i<this.selectedList.length; i++ ) {
                 sum+= this.selectedList[i].value;
@@ -375,7 +363,7 @@
                 }
                 this.selectedList= [];
 
-                // quitar marca de seleccion al ladrillo.
+                
                 this.fireEvent('brick','selectionoverflow', selected );
             } else if ( sum==this.guessNumber ) {
                 this.selectedList.push(brick);
@@ -385,13 +373,13 @@
                     this.selectedList[i].removed= true;
                 }
 
-                // rearrange bricks if needed
+                
                 if ( this.gameMode.rearrange_on_remove ) {
                     for( i=0; i<this.selectedList.length; i++ ) {
                         var r= this.selectedList[i].row;
                         var c= this.selectedList[i].column;
 
-                        // bajar todos los elementos de columna una posicion.
+                        
                         for( var row= r; row>0; row-- ) {
                             var move= this.data[row-1][c];
                             var to=   this.data[row][c];
@@ -400,7 +388,7 @@
                             this.data[row-1][c]= this.data[row][c];
                             this.data[row][c]= tmp;
 
-                            // cambiar row del brick. la columna es la misma
+                            
                             tmp= move.row;
                             move.row= to.row;
                             to.row= tmp;
@@ -437,7 +425,7 @@
                 this.setStatus( this.ST_LEVEL_RESULT );
                 
             } else {
-                // todavia podemos sumar numeros.
+                
                 this.selectedList.push(brick);
                 this.fireEvent('brick','selection',brick);
                 this.setMultipliers();
@@ -445,7 +433,7 @@
         },
         setGuessNumber : function() {
 
-            // first get all available board numbers.
+            
             var activeBricks= [];
             var i,j;
             for( i=0; i<this.rows; i++ ) {
@@ -456,7 +444,7 @@
                 }
             }
 
-            // scramble elements.
+            
             if ( activeBricks.length>1 ) {
                 for( i=0; i<activeBricks.length; i++ ) {
                     var rpos0=              (Math.random()*activeBricks.length)>>0;
@@ -474,7 +462,7 @@
              */
             var sum=0;
             var diff= this.brickIncrementByDifficulty[this.difficulty];
-            //var min= 10 + (this.level-1)*diff;
+            
             var index__= this.level-1;
             if ( index__>=this.gameMode.number_policy.length ) {
                 index__= this.gameMode.number_policy.length-1;
@@ -512,11 +500,11 @@
             this.setStatus( this.ST_ENDGAME );
         },
         respawn : function() {
-            // comprobar que podemos meter nuevos elementos.
+            
             var cabenMas= true;
             var i,j;
             for( i=0; i<this.currentColumns; i++ ) {
-                // una columna est‡ llena. no seguir.
+                
                 if ( !this.data[0][i].removed ) {
                     cabenMas= false;
                     break;
@@ -529,16 +517,16 @@
             }
 
             var respawnData= [];
-            // meter una nueva fila de numeros.
+            
             for( j=0; j<this.currentColumns; j++ ) {
-                // buscar la fila donde cae el numero
+                
                 for( i=0; i<this.currentRows; i++ ) {
                     if ( !this.data[i][j].removed ) {
                         break;
                     }
                 }
 
-                // i tiene la fila con el ultimo elemento valido
+                
                 i--;
                 this.data[i][j].removed= false;
                 this.data[i][j].selected= false;
