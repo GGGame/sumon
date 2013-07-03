@@ -1,4 +1,4 @@
 sumon
 =====
 
-CocoonJS Sumon demo
+CocoonJS Sumon demo--migrate to ejecta
