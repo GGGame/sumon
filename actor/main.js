@@ -21,9 +21,9 @@ function createCanvas() {
     var director;
 
     if ( window.innerWidth>window.innerHeight ) {
-        director= new CAAT.Director().initialize(700,500);
+        director= new CAAT.Director().initialize(700,500,document.getElementById('canvas'));
     } else {
-        director= new CAAT.Director().initialize(500,750);
+        director= new CAAT.Director().initialize(500,750,document.getElementById('canvas'));
     }
 
     director.canvas.style.cssText = "idtkscale:fill;"
